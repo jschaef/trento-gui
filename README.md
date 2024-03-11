@@ -12,7 +12,7 @@ A web interface for displaying textual output generated using https://github.com
 
 ```
 git clone https://github.com/jschaef/trento-gui.git
-cd trento-gui/code
+cd trento-gui
 python3.xx -m venv venv, e.g. python3.11 -m venv venv
 source ./venv/bin/activate
 pip install -U pip
@@ -21,9 +21,9 @@ pip install -r requirement.txt
 
 ## configure
 
-* edit <code>code/config.py</code>
+* edit <code>config.py</code>
 * optional:
-     edit <code>code/.streamlit/config.toml</code>
+     edit <code>.streamlit/config.toml</code>
 
 ## run
 
