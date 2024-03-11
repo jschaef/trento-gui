@@ -11,7 +11,7 @@ import time
 start_time = time.perf_counter()
 
 if st.session_state.get("logged_in", None) :
-    username = st.session_state.role
+    username = st.session_state.username
     workspace = f"{cfg.Config.UPLOAD_DIR}/{username}/scripts"
     host_group = ""
     system(f"mkdir -p {workspace}")

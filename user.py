@@ -13,6 +13,7 @@ def create_user_file(filename: str):
             "user_name": ["admin"],
             "creation_time": [datetime.now()],
             "password": [admin_pass_enc],
+            "role": ["admin"],
         }
     )
     df.write_parquet(filename)
@@ -48,6 +49,7 @@ def add_user(df: pl.DataFrame, username: str, password: str,
             "user_name": [username],
             "creation_time": [datetime.now()],
             "password": [password],
+            "role": "user",
         }
     )
     df = df.vstack(df1)
@@ -70,12 +72,21 @@ def check_user(df: pl.DataFrame, username: str, password: str) -> bool:
     if stored_pwd.shape[0] != 0:
         stored_pwd = stored_pwd["password"][0]
     else:
-        return False
+        return [False,  False]
     if helpers.hashing.verify_password(stored_pwd, password):
-        return True
+        return [True, True]
+    else:
+        return [False, True]
 
 def user_exists(df: pl.DataFrame, username: str) -> bool:
     return df.filter(pl.col("user_name") == username).shape[0] > 0
+
+def get_user_role(user_file: str, username: str,) -> str:
+    df = load_user_file(user_file)
+    role = df.filter(pl.col("user_name") == username).select(pl.col("role"))
+    role = role["role"][0]
+    return role
+
 
 def signup(user_file) -> tuple[bool, str]:
     df = load_user_file(user_file)
@@ -103,11 +114,12 @@ def login(filename: str, col: st.columns ) -> tuple[str, str]:
     password = col1.text_input("Password", type='password')
     if st.button("Login"):
         if username and password:
-            if check_user(df, username, password):
+            if all(check_user(df, username, password)):
                 st.session_state.logged_in = True
                 return "logged_in", username
             elif user_exists(df, username):
-                return "user_exists", username
+                if not all(check_user(df, username, password)):
+                    return "user_password_wrong", username
             else:
                 return "user_not_exists", username
         else:

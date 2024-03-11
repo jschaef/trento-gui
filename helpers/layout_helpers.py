@@ -4,7 +4,7 @@ import config as cfg
 import helpers.tar_file_reader as tfr
 
 def get_support_files(col: st.columns=None, key: str=None):
-    username = st.session_state.role
+    username = st.session_state.username
     base_dir = os.getcwd()
     upload_dir = f"{base_dir}/{cfg.Config.UPLOAD_DIR}/{username}/support_files"
     if not os.path.isdir(upload_dir):
@@ -28,7 +28,7 @@ def collect_support_files(col: st.columns,) -> list:
     col1 = cols_cont[0]
     col2 = cols_cont[1]
     check_field = []
-    username = st.session_state.role
+    username = st.session_state.username
     base_dir = os.getcwd()
     upload_dir = f"{cfg.Config.UPLOAD_DIR}/{username}/support_files"
     col1.write('')

@@ -12,7 +12,7 @@ if "logged_in" not in st.session_state:
     if selection:
         st.session_state.logged_in = True
         st.session_state.login_task = None
-        st.session_state.role = user
+        st.session_state.username = user
         st.success("You have been logged in")
         st.switch_page("app.py")
 else:
