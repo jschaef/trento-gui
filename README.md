@@ -23,10 +23,11 @@ pip install -r requirement.txt
 
 * edit <code>config.py</code>
 * optional:
-     edit <code>.streamlit/config.toml</code>
+     edit <code>./pages/.streamlit/config.toml</code>
 
 ## run
 
+Do below inside the virtual environment:
 
 * <code>cd trento-gui</code>
 * <code>streamlit run app.py</code>

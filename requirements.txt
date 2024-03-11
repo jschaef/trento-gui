@@ -1,4 +1,4 @@
 pandas
-polar
+polars
 python-magic
 streamlit
