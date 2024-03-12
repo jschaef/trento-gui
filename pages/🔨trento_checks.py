@@ -59,28 +59,37 @@ if st.session_state.get("logged_in", None) :
             support_files = []
     col1, col2 = st.columns([0.3, 0.7])
 
+
     if support_files:
         # with st.spinner(f"Investigating supportconfig files {support_files}"):
         vf.make_vspace(5, col1)
-        show_info =col1.toggle("Display basic supportconfig information", False)
-            # with h_expander:
+        col_displ = col2_ph if host_gr_bool else col1
+        show_info = col_displ.toggle("Display basic supportconfig information", False)
         basic_info = lh.get_basic_information(support_files)
         if show_info:
             col1.write(basic_info)
         groups = ["all", "corosync", "sbd"]
         vf.make_vspace(1, col1)
-        col1_1 = col1.columns(2)[0]
+        col1_1, col1_2 = col1.columns(2)
         checks = col1_1.selectbox("Select which Trento checks you want to execute", groups)
         vf.make_vspace(1, col1)
-        if col1.button("Run Trento Checks"):
+        if col1.button("Run Trento Checks", on_click=lh.trento_check_post, args=(support_files,)):
             if host_gr_bool and not host_group:
                 col1.warning("Please enter a hostgroup name")
+                lh.trento_check_clean_up()
             else:
                 with st.spinner("Waiting for Trento checks to complete..."):
                     col1.write("")
+                    col1, col2 = st.columns([0.7, 0.3])
                     script_container = col1.container(height=300, border=True)
                     ret_code = ssc.test_cmd(workspace,script_container)
-                if col1.button("Back to top"):
+                    vf.make_big_vspace(3, col1)
+                    col1_1, col1_2 = col1.columns(2)
+                    col1_1.write("""Please cleanup the workspace after you are done with the checks""")
+                    if col1_2.button("Cleanup", help="Delete the supportconfig containers"):
+                        pass
+                    
+                if col1.button("Back to top", on_click=lh.trento_check_clean_up):
                     pass
 else:
     st.warning("you are not logged in, login first")
