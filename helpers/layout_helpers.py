@@ -16,7 +16,8 @@ def get_support_files(col: st.columns=None, key: str=None):
         if not col:
             col1, col2, col3 = st.columns([2,1, 1])
             col1.write(''), col3.write('')
-            selection = col2.selectbox('support_files', support_files, key=key)
+            selection = col2.selectbox('support_files', support_files, key=key,
+                on_change=trento_check_clean_up)
         else:
             selection = col.selectbox('support_files', support_files, key=key)
     else:
@@ -67,3 +68,8 @@ def get_basic_information(path_field: list) -> dict:
     
     return return_dict
         
+def trento_check_post(support_files):
+    st.session_state.trento_check = support_files 
+
+def trento_check_clean_up():
+    st.session_state.pop("trento_check", None)
