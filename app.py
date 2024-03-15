@@ -1,5 +1,7 @@
 import streamlit as st
+from os import path
 from menu import menu
+
 
 st.set_page_config(
     page_title="Trento Supportconfig Analyzer",
@@ -8,6 +10,13 @@ st.set_page_config(
     #page_icon="🐧",
     page_icon="🔍",
 )
+
+def local_css(file_name: str):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+cur_dir = path.dirname(path.realpath(__file__))
+local_css(f"{cur_dir}/style.css")
 
 # Initialize st.session_state.role to None
 if "login_task" not in st.session_state:
