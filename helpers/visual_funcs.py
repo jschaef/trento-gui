@@ -39,6 +39,11 @@ def make_vspace(size: int, col: object) -> None:
     col.write(f"{size * '#'}")
 
 def make_big_vspace(size:int, col: object) -> None:
-    for x in range(size):
+    for _ in range(size):
         make_vspace(1, col)
+
+def local_css(file_name: str):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 

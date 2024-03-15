@@ -5,8 +5,11 @@ import config as cfg
 import helpers.start_support_container as ssc
 import helpers.visual_funcs as vf
 import helpers.layout_helpers as lh
-from os import system
+from os import system, path
 import time
+
+cur_dir = path.dirname(path.realpath(__file__))
+vf.local_css(f"{cur_dir}/style.css")
 
 start_time = time.perf_counter()
 
@@ -72,6 +75,13 @@ if st.session_state.get("logged_in", None) :
         vf.make_vspace(1, col1)
         col1_1, col1_2 = col1.columns(2)
         checks = col1_1.selectbox("Select which Trento checks you want to execute", groups)
+        vf.make_big_vspace(2, col2)
+        arbitr_key  = list(basic_info.keys())[0]
+        manufacturer = basic_info[arbitr_key]["hardware"]["Manufacturer"].strip()
+        comps = ["Xen", "VMware", "KVM", "Microsoft Corporation", "Google", "Lenovo", "Amazon EC2"]
+        index = comps.index(manufacturer) if manufacturer in comps else 0
+        col2.radio(f"Manufacturer {manufacturer} detected", 
+            comps, index=index,horizontal=True, help="Correct the manufacturer if it has been wrongly detected")
         vf.make_vspace(1, col1)
         if col1.button("Run Trento Checks", on_click=lh.trento_check_post, args=(support_files,)):
             if host_gr_bool and not host_group:
@@ -97,3 +107,5 @@ else:
 
 end = time.perf_counter()
 st.write(f'process_time: {round(end-start_time, 4)}')
+
+# Manufacturer:  Amazon EC2, Xen, VMware, KVM, Microsoft Corporation, Google, Lenovo
