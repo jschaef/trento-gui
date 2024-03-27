@@ -2,3 +2,4 @@ venv/
 *.parquet
 *.pyc
 __pycache__/
+upload/

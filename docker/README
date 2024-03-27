@@ -1,0 +1,1 @@
+from ../ execute docker build -f docker/Dockerfile .
