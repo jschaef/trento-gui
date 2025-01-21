@@ -15,13 +15,13 @@ def create_support_df(user_name: str) -> pl.DataFrame:
     # Define the schema with empty columns
     return pl.DataFrame(
         {
-            "user_name": pl.Series([user_name], dtype=pl.Utf8),
+            "user_name": pl.Series([], dtype=pl.Utf8),
             "support_config": pl.Series([], dtype=pl.Utf8),
             "project": pl.Series([], dtype=pl.Utf8),
             "basic_environment": pl.Series([], dtype=pl.Utf8),
             "check_results": pl.Series([], dtype=pl.Utf8),
             "container_state": pl.Series([], dtype=pl.Boolean),
-            "creation_time": pl.Series([], dtype=pl.DateTime),
+            "creation_time": pl.Series([], dtype=pl.Datetime),
         }
     )
     

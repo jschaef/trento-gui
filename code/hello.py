@@ -1,3 +1,5 @@
-import streamlit as st
+import helpers.handle_support_file as hsf
 
-st.write("Hello, world!")
+if __name__ == "__main__":
+    print(hsf.load_support_file("admin"))
+    
