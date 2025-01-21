@@ -1,4 +1,7 @@
 pandas
+docker
+defusedxml
+termcolor
 polars
 python-magic
 streamlit

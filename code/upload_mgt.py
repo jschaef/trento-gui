@@ -39,7 +39,7 @@ def file_mngmt(upload_dir: str):
                                     link_check = 1
                 if link_check == 1:
                     visf.make_vspace(1, col1)
-                    col1.page_link("pages/🔨trento_checks.py", label="Go to Trento Checks",
+                    col1.page_link("pages/6_🔨trento_container_initialization.py", label="Go to Trento Checks",
                         icon="🔨")
 
     elif managef_options == 'Delete Supportconfig Files':

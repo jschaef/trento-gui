@@ -9,6 +9,7 @@ import helpers.layout_helpers as lh
 import helpers.call_backs as hcb
 import helpers.handle_support_file as hsf
 from os import system, path
+import helpers.tcsc_checks as tcsc_checks
 
 cur_dir = path.dirname(path.realpath(__file__))
 vf.local_css(f"{cur_dir}/style.css")
@@ -25,10 +26,9 @@ if st.session_state.get("logged_in", None) :
     workspace = f"{user_dir}/scripts"
     system(f"mkdir -p {workspace}")
 
-    st.title("Trento Checks")
+    st.title("Trento Initial Setup")
     col1, *_ = vf.create_columns(3, [0, 1, 1])
-    col1.write("This page is for Trento checks")
-    col1.write("""Select parameters below to run your checks.""")
+    col1.write("""On this page you initialize the Trento containers to prepare checks on your supportconfig files.""")
     col1.write('___')
     grid_parent = st.empty()
 
@@ -70,7 +70,7 @@ if st.session_state.get("logged_in", None) :
         if not support_files:
             col1.info("""You don't have any supportconfig files to check with trento.
                 Please upload a supportconfig first.""")
-            col1.page_link("pages/📂manage supportconfigs.py", label="Go to the Upload page",
+            col1.page_link("pages/5_📂manage supportconfigs.py", label="Go to the Upload page",
                                    icon="📂")
             support_files = []
 
@@ -101,20 +101,26 @@ if st.session_state.get("logged_in", None) :
         col1_1, col1_2 = col1.columns([0.2,0.8])
         # checks = col1_1.selectbox("Select which Trento checks you want to execute", groups)
         vf.make_big_vspace(1, col1)
+        wanda_ret_code = 1
         if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
-            with st.spinner("Waiting for container starts..."):
+            with st.spinner("Waiting for container starts ..."):
                 col1.write("")
-                col1, col2 = st.columns([0.7, 0.3])
-                script_container = col1.container(height=800, border=True)
-                ret_code = ssc.test_cmd(workspace,script_container, support_files_pathes)
-                vf.make_big_vspace(3, col1)
-                col1_1, col1_2 = col1.columns(2)
-                col1_1.write("""Please cleanup the workspace after you are done with the checks""")
-                if col1_2.button("Cleanup", help="Delete the supportconfig containers"):
+                col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
+                script_container = col1.container(border=True)
+                #ret_code = ssc.test_cmd(workspace,script_container, support_files_pathes)
+                wanda_dict = {"project": project}
+                ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
+            wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
+
+        vf.make_big_vspace(1, col1)
+        col1_1, col1_2 = col1.columns([0.2,0.8])
+        if wanda_ret_code == 0:
+            col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
+                of project {project}""", icon="🔍")
+        vf.make_big_vspace(1, col1)
+        if col1.button("Back to top", on_click=lh.trento_check_clean_up):
                     pass
-                    
-                if col1.button("Back to top", on_click=lh.trento_check_clean_up):
-                    pass
+        
 else:
     st.warning("you are not logged in, login first")
     st.switch_page("app.py")

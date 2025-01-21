@@ -10,4 +10,4 @@ if st.session_state.get("logged_in", None) :
     upload_mgt.file_mngmt(upload_dir)
 
 else:
-    st.switch_page("pages/👩‍💻login.py")
+    st.switch_page("pages/1_👩‍💻login.py")

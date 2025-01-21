@@ -11,7 +11,5 @@ if not st.session_state.get("user_role", None) == "admin":
     menu_with_redirect()
 
 else:
-    # st.sidebar.page_link("pages/📂supportconfigs-upload.py", label="Upload supportconfigs", 
-    #     icon="🔼")
     cols = st.columns(4)
     admin_service.admin_menu(cols) # Render the admin service

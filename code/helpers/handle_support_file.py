@@ -16,7 +16,7 @@ def create_support_df(user_name: str) -> pl.DataFrame:
     return pl.DataFrame(
         {
             "user_name": pl.Series([], dtype=pl.Utf8),
-            "support_config": pl.Series([], dtype=pl.Utf8),
+            "support_configs": pl.Series([], dtype=pl.List(pl.Utf8)),
             "project": pl.Series([], dtype=pl.Utf8),
             "basic_environment": pl.Series([], dtype=pl.Utf8),
             "check_results": pl.Series([], dtype=pl.Utf8),

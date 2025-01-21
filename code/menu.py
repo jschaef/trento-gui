@@ -1,12 +1,12 @@
 import streamlit as st
 
 def authenticated_menu():
-    st.sidebar.page_link("pages/📂manage supportconfigs.py", label="Upload supportconfigs", 
+    st.sidebar.page_link("pages/5_📂manage supportconfigs.py", label="Upload supportconfigs", 
         icon="🔼")
-    st.sidebar.page_link("pages/🔨trento_checks.py", label="Check supportconfig with Trento", 
+    st.sidebar.page_link("pages/8_🔍trento_checks.py", label="Check supportconfig with Trento", 
         icon="🏁")
     if st.session_state.get("user_role", None) in ["admin"]:
-        st.sidebar.page_link("pages/👩‍✈️admin.py", label="Admin tasks",
+        st.sidebar.page_link("pages/4_👩‍✈️admin.py", label="Admin tasks",
             disabled=st.session_state.user_role !="admin", icon="👩‍✈️")
 
 def unauthenticated_menu():
@@ -28,11 +28,11 @@ def menu_with_redirect():
     # render the navigation menu
     if "login_task"  in st.session_state:
         if st.session_state.login_task == "signup":
-            st.switch_page("pages/📝signup.py")
+            st.switch_page("pages/2_📝signup.py")
         elif st.session_state.login_task == "login":
-            st.switch_page("pages/👩‍💻login.py")
+            st.switch_page("pages/1_👩‍💻login.py")
     else:
-        st.switch_page("pages/👩‍💻login.py")
+        st.switch_page("pages/1_👩‍💻login.py")
     #if st.session_state.get("user_role", None)  in "user":
     #    pass
             # st.write("You are not authorized to view this page.")
