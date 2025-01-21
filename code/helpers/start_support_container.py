@@ -1,45 +1,10 @@
 #!/usr/bin/python3
 
-import os
 import helpers.printer_help as p_help
+import helpers.tcsc_checks as tcsc_checks
+from streamlit.delta_generator import DeltaGenerator
 
-def run_support_container(workspace: str, container_script_dir: str, 
-        supportconfigs: list, placeholder: object)-> object:
-    servers = []
-    os.system(f"mkdir -p {workspace}")
-    os.system(f"cp -av {container_script_dir}/* {workspace}")
-    for supportconfig in supportconfigs:
-        os.system(f"cp -av {supportconfig} {workspace}")
-        supportconfig_bname = os.path.basename(supportconfig)
-        server_name = supportconfig_bname.split('_')[1]
-        servers.append(server_name)
-    trento_str = "fb92284e-aa5e-47f6-a883-bf9469e7a0dc"
-    servers = ' '.join(servers)
-    supportconfigs = ' '.join(supportconfigs)
-    script = f"""
-#!/bin/bash
-cd {workspace}
-# create .container_def file
-for server in "{servers}"; do
-    machine_id=$(dbus-uuidgen)
-    trento_agent_id=$(dbus-uuidgen -N $machine_id -n {trento_str} --sha1)
-
-    cat <<HERE >>.container_def
-$server:$machine_id:$trento_agent_id
-HERE
-
-    sleep 5
-    for supportconfig in "{supportconfigs}"; do
-        ./start_container  $supportconfig 
-    done
-
-done
-"""
-
-    ret = p_help.run_script(script, workspace, 'run_container.sh', placeholder)
-    return ret
-
-def test_cmd(workspace, place_holder):
+def test_cmd(workspace: str, place_holder: DeltaGenerator, support_files: list)-> bool:
     script = """
 #!/bin/bash
     unset LANG
@@ -47,6 +12,39 @@ def test_cmd(workspace, place_holder):
     find upload
     sleep 5
 """
+    cols = place_holder.columns([1, 1])
+    col1 = cols[0]
+    check_result = tcsc_checks.check_environment(col1)
+    if check_result:
+        ret = p_help.run_script(script, workspace, 'run_test.sh', place_holder)
+        return ret
+    return False
 
-    ret = p_help.run_script(script, workspace, 'run_test.sh', place_holder)
-    return ret
+def start_containers(workspace: str, place_holder: DeltaGenerator,
+        support_files: list, wanda_dict: dict)-> bool:
+    """Start the supportconfig containers
+    
+    arguments:
+    workspace -- file to place the script
+    place_holder -- streamlit container
+    support_files -- list of supportconfig files
+    wanda_dict -- dictionary with wanda information like:
+        * project (wanda groupname)
+        * provider
+        * cluster_type (ensa1, ensa2, mixed_versions)
+        * filesystem_type
+        * architecture_type
+        * hana_scenario
+    Return: result (bool)
+    """
+
+    project = wanda_dict.pop("project")
+    wanda_env = " ".join([f"{key}={value}" for key, value in wanda_dict.items()])
+    
+    script = f"""
+ #!/bin/bash
+    unset LANG
+    tcsc hosts create {project} -e {wanda_env} {support_files}
+    """
+
+    ret = p_help.run_script(script, workspace, 'start_containers.sh', place_holder)

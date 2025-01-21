@@ -1,7 +1,7 @@
 import streamlit as st
 
 def authenticated_menu():
-    st.sidebar.page_link("pages/📂supportconfigs-upload.py", label="Upload supportconfigs", 
+    st.sidebar.page_link("pages/📂manage supportconfigs.py", label="Upload supportconfigs", 
         icon="🔼")
     st.sidebar.page_link("pages/🔨trento_checks.py", label="Check supportconfig with Trento", 
         icon="🏁")

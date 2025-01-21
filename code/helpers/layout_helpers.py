@@ -2,8 +2,9 @@ import os
 import streamlit as st
 import config as cfg
 import helpers.tar_file_reader as tfr
+from typing import Optional
 
-def get_support_files(col: st.columns=None, key: str=None):
+def get_support_files(col: Optional[st.delta_generator.DeltaGenerator]=None, key: Optional[str]=None):
     username = st.session_state.username
     base_dir = os.getcwd()
     upload_dir = f"{base_dir}/{cfg.Config.UPLOAD_DIR}/{username}/support_files"

@@ -62,9 +62,7 @@ def load_df_from_file(
     if not os.path.exists(filename):
         df = create_user_status_df()
         write_df_to_file(df, filename)
-    else:
-        df = pl.read_parquet(filename)
-    return df
+    return pl.read_parquet(filename)
 
 def write_df_to_file(df: pl.DataFrame, filename: str = USER_LOGIN_FILE) -> None:
     df.write_parquet(filename)

@@ -6,8 +6,6 @@ from menu import menu
 st.set_page_config(
     page_title="Trento Supportconfig Analyzer",
     layout='wide',
-    #page_icon="wiki_pictures/kisspng-penguin-download-ico-icon-penguin-5a702cc04e5fc1.8432243315173009283211.png",
-    #page_icon="🐧",
     page_icon="🔍",
 )
 

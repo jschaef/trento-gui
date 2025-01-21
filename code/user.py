@@ -4,6 +4,7 @@ import helpers.hashing
 import config as cfg
 from datetime import datetime
 from os import path
+from typing import Optional
 
 def create_user_file(filename: str):
     admin_pass = cfg.Config.ADMIN_PASS
@@ -105,7 +106,8 @@ def signup(user_file) -> tuple[bool, str]:
     else:
         st.stop()
 
-def login(filename: str, col: st.columns ) -> tuple[str, str]:
+
+def login(filename: str, col: Optional[st.delta_generator.DeltaGenerator] = None) -> tuple[str, str]:
     col = col or st.columns(1)
     df = load_user_file(filename)
     st.subheader("Login")

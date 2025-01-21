@@ -1,14 +1,16 @@
 import polars as pl
-from os import path, listdir, system
 import helpers.visual_funcs as visf
+from os import path, listdir, system
 from magic import from_buffer
+import helpers.handle_support_file as hsf
 
 def file_mngmt(upload_dir: str):
     col1, _, _ = visf.create_columns(3,[0,1,])
     if not path.isdir(upload_dir):
         system(f'mkdir -p {upload_dir}')
     manage_files = ['Show Supportconfig Files','Add Supportconfig Files', 'Delete Supportconfig Files']
-    support_files = [ x for x in listdir(upload_dir) if path.isfile(f'{upload_dir}/{x}')]
+    #support_files = [ x for x in listdir(upload_dir) if path.isfile(f'{upload_dir}/{x}')]
+    support_files = hsf.get_support_config_files(upload_dir)
     file_size = [path.getsize(f'{upload_dir}/{x}') for x in support_files]
     managef_options = col1.selectbox(
         'Show/Add/Delete', manage_files)
