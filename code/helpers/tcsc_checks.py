@@ -56,3 +56,19 @@ def check_project_status(col: DeltaGenerator, project: str):
         col.error("Failed to check project status")
         col.code(stderr)
     return result.returncode
+
+def run_checks(workspace: str, username: str, project: str, place_holder: DeltaGenerator)-> str:
+    """Run the Trento checks
+    
+    arguments:
+    username -- user's unique name
+    project -- wanda groupname
+    place_holder -- streamlit container
+    Return: result (bool)
+    """
+    script = f"""
+ #!/bin/bash
+    unset LANG
+    tcsc checks run {project}
+    """
+    ret = p_help.run_script(script, workspace, 'run_checks.sh', place_holder)

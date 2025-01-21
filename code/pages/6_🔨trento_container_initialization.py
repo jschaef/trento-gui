@@ -24,7 +24,8 @@ if st.session_state.get("logged_in", None) :
     user_dir = f"{cfg.Config.UPLOAD_DIR}/{username}"
     support_file_dir = f"{user_dir}/support_files"
     workspace = f"{user_dir}/scripts"
-    system(f"mkdir -p {workspace}")
+    if not path.isdir(workspace):
+        system(f"mkdir -p {workspace}")
 
     st.title("Trento Initial Setup")
     col1, *_ = vf.create_columns(3, [0, 1, 1])
@@ -79,11 +80,9 @@ if st.session_state.get("logged_in", None) :
         vf.make_vspace(5, col1)
         col1 = st.columns([1])[0]
 
-        if cluster:
-            support_files_pathes = [f"{support_file_dir}/{x}" for x in project_support_files]
-        else:
-            support_files_pathes = [f"{support_file_dir}/{x}" for x in [project_support_files]]
-        # col_displ = col2_ph if host_gr_bool else col1
+        if not cluster:
+            project_support_files = [project_support_files]
+        support_files_pathes = [f"{support_file_dir}/{x}" for x in project_support_files]
         if project_support_files:
             col_displ = col1
             show_info = toggle_ph.toggle("Display basic supportconfig information", False)
@@ -107,7 +106,6 @@ if st.session_state.get("logged_in", None) :
                 col1.write("")
                 col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
                 script_container = col1.container(border=True)
-                #ret_code = ssc.test_cmd(workspace,script_container, support_files_pathes)
                 wanda_dict = {"project": project}
                 ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
             wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
@@ -115,6 +113,11 @@ if st.session_state.get("logged_in", None) :
         vf.make_big_vspace(1, col1)
         col1_1, col1_2 = col1.columns([0.2,0.8])
         if wanda_ret_code == 0:
+            df, support_file = hsf.load_support_file(username)
+            projects = hsf.get_projects(username)
+            if project not in projects:
+                hsf.initial_update_support_file(username, support_file, project_support_files, 
+                    project, basic_info)
             col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
                 of project {project}""", icon="🔍")
         vf.make_big_vspace(1, col1)

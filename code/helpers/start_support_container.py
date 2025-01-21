@@ -4,22 +4,6 @@ import helpers.printer_help as p_help
 import helpers.tcsc_checks as tcsc_checks
 from streamlit.delta_generator import DeltaGenerator
 
-def test_cmd(workspace: str, place_holder: DeltaGenerator, support_files: list)-> bool:
-    script = """
-#!/bin/bash
-    unset LANG
-    ls -latrh upload
-    find upload
-    sleep 5
-"""
-    cols = place_holder.columns([1, 1])
-    col1 = cols[0]
-    check_result = tcsc_checks.check_environment(col1)
-    if check_result:
-        ret = p_help.run_script(script, workspace, 'run_test.sh', place_holder)
-        return ret
-    return False
-
 def start_containers(workspace: str, place_holder: DeltaGenerator,
         support_files: list, wanda_dict: dict)-> bool:
     """Start the supportconfig containers
