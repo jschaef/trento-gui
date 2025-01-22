@@ -29,13 +29,14 @@ if st.session_state.get("logged_in", None):
         if not path.isdir(workspace):
             system(f"mkdir -p {workspace}")
 
-        vf.make_big_vspace(1, col1)
+        vf.make_vspace(3, col1)
 
         check_results = hsf.get_check_results(username, project)
-        if check_results:
-            format_output = fwo.format_output(check_results, col1b)
+        if len(check_results) > 1:
+            if col1b.button(f"Show check results for {project}", key="run_historical_checks"):
+                format_output = fwo.format_output(check_results, col1b)
         else: 
-            if col1b.button("Run checks", key="run_checks"):
+            if col1b.button(f"Run initial checks for {project}", key="run_checks"):
                 col1b.info(f"""project {project} seems to be running the 
                     first time and needs to be processed. Be patient - 
                     it may take a while""")
