@@ -45,7 +45,7 @@ if st.session_state.get("logged_in", None) :
     sradio_help = """Parse one/multiple supportconfig files or check historical data from 
         a recent project"""
     support_action_radio = col1.radio("Choose an option", ["__Create a new project__", "__Revisit historical check results__"],
-        help=sradio_help, horizontal=True)
+        help=sradio_help, horizontal=True, index=0)
     if support_action_radio == "__Create a new project__":
         project = col3.text_input(
             "Project Name",
@@ -55,6 +55,8 @@ if st.session_state.get("logged_in", None) :
         )
         cluster =  col2.checkbox(help="""Check this box if you want to compare multiple supportconfig files,
                          e.g. from a cluster""", label="Cluster")
+    else:
+        st.switch_page("pages/8_🔍trento_checks.py")
 
     vf.make_big_vspace(1, col1)
     vf.make_big_vspace(2, col3)
