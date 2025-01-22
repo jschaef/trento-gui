@@ -74,6 +74,25 @@ def execute(cmd, placeholder,):
     for line in streamer.start():
         if line !="":
             output_func(line)
+
+def execute_1(cmd):
+    collect_field = []
+    output_lines = []
+    popen = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, universal_newlines=True, bufsize=10)
+    for stdout_line in iter(popen.stdout.readline, ""):
+        #sys.__stdout__.write(stdout_line)
+        result = ansi_escape.sub('', stdout_line)
+        result = result.strip()
+        if result:
+            collect_field.append(result)
+    return_code = popen.wait()
+    if return_code:
+        output_lines.append("=========================")
+        output_lines.append(subprocess.CalledProcessError(return_code, cmd))
+        output_lines.append("=========================")
+    popen.stdout.close()
+    return return_code, collect_field, output_lines
     
 if __name__ == "__main__":
     streamer = Streamer(job, (['find', '/home/jschaef/Downloads']))

@@ -35,6 +35,25 @@ def run_script(script,workspace, name, placeholder):
     placeholder.code(script)
     return stdout_to_streamlit(trento_script_path, script, placeholder)
 
+def stdout_to_streamlit_1(trento_script_path, script, placeholder):
+    ret_code = True
+    with open(trento_script_path, 'w') as ts:
+        ts.write(script)
+    chmod(trento_script_path, 0o750)
+    try:
+        ret_code, output, error_field = lgh.execute_1(['/bin/bash', trento_script_path])
+    except CalledProcessError as e:
+        placeholder.error(
+            f'Execution of script failed with returncode {e.returncode}')
+        return e.returncode, error_field
+    subprocess.run(f'rm -rf {trento_script_path}', shell=True)
+    return ret_code, output, error_field 
+
+def run_script_1(script, workspace, name, placeholder):
+    trento_script_path = f'{workspace}/{name}'
+    placeholder.code(script)
+    return stdout_to_streamlit_1(trento_script_path, script, placeholder)
+
 def prg_stdout_val(cmd):
     ret = subprocess.run(cmd, capture_output=True, shell=True)
     return ret.stdout.decode()

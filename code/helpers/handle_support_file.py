@@ -22,7 +22,7 @@ def create_support_df(user_name: str) -> pl.DataFrame:
             "support_configs": pl.Series([], dtype=pl.List(pl.Utf8)),
             "project": pl.Series([], dtype=pl.Utf8),
             "basic_environment": pl.Series([], dtype=pl.Utf8),
-            "check_results": pl.Series([], dtype=pl.Utf8),
+            "check_results": pl.Series([], dtype=pl.List(pl.Utf8)),
             "container_state": pl.Series([], dtype=pl.Boolean),
             "creation_time": pl.Series([], dtype=pl.Datetime),
         }
@@ -81,7 +81,7 @@ def initial_update_support_file(user_name: str, pl_support_file: str,
             "support_configs": [support_configs],
             "project": [project],
             "basic_environment": [json.dumps(basic_env)],  # Add default values for other columns
-            "check_results": [""],
+            "check_results": [[""]],
             "container_state": [True],
             "creation_time": [datetime.now()],
         }
@@ -103,3 +103,29 @@ def get_projects(user_name: str) -> list:
     """
     df, _ = load_support_file(user_name)
     return df.select("project").unique().to_series().to_list()
+
+def add_wanda_check_results(user_name: str, check_results: list, project: str) -> pl.DataFrame:
+    """Add the wanda check results to the support file
+
+    Args:
+        user_name (str): The user's unique name
+        check_results (list): The list of check results
+        project (str): The project name
+
+    Returns:
+        pl.DataFrame: The updated support file
+    """
+    # Get the user name
+    df, support_file = load_support_file(user_name)
+    # Update the check results for the specified project
+
+    df = df.with_columns(
+        pl.when(pl.col("project") == project)
+        .then(pl.lit(check_results))
+        .otherwise(pl.col("check_results"))
+        .alias("check_results")
+    )
+
+    # Write the updated DataFrame back to the parquet file
+    df.write_parquet(support_file)
+    return df

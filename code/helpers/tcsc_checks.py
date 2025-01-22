@@ -2,7 +2,10 @@ import shutil
 import subprocess
 import re
 import importlib
+import streamlit as st
 import helpers.printer_help as p_help
+import helpers.format_wanda_output as fwo
+import helpers.handle_support_file as hsf
 from streamlit.delta_generator import DeltaGenerator
 
 def check_environment(col: DeltaGenerator) -> bool:
@@ -71,4 +74,10 @@ def run_checks(workspace: str, username: str, project: str, place_holder: DeltaG
     unset LANG
     tcsc checks run {project}
     """
-    ret = p_help.run_script(script, workspace, 'run_checks.sh', place_holder)
+    with st.spinner("Running checks ..."):
+        ret = p_help.run_script_1(script, workspace, 'run_checks.sh', place_holder)
+        check_results = ret[1]
+        df = hsf.add_wanda_check_results(username, check_results, project)
+        format_output = fwo.format_output(check_results, place_holder)
+        #place_holder.code(ret[1])
+        #place_holder.code(format_output)
