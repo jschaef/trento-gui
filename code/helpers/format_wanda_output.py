@@ -28,6 +28,8 @@ def format_output(output: list, col: DeltaGenerator):
 
     indent = "&nbsp;"
     indent_val = 10
+    id_field = ["hostname", "hostgroup", "agent id"]
+    host_field = []
 
     for line in output:
         line.strip()
@@ -50,6 +52,14 @@ def format_output(output: list, col: DeltaGenerator):
                     line = f'<span style="color:{color}">{line}</span>'
                     col.markdown(line, unsafe_allow_html=True)
                     break
+        elif any(re.match(f"^{id}:.*", line) for id in id_field):
+            host_field.append(line)
+            if len(host_field) == len(id_field):
+                line = ", ".join(host_field)
+                line = re.sub(r"^(.*)$", rf"{indent * indent_val}\1", line)
+                col.write(line, unsafe_allow_html=True)
+                host_field = []
+
         else:
             line = re.sub(r"^(.*)$", rf"{indent * indent_val}\1", line)
             col.write(line, unsafe_allow_html=True)
