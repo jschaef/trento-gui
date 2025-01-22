@@ -33,7 +33,13 @@ if st.session_state.get("logged_in", None):
             script_container = col1.container(border=True)
             ret = tcsc_checks.run_checks(workspace, username, project, col1)
             col1.write(ret)
-            
+    else:
+        col1.write("No projects found, please create a project first")
+        col1.page_link(
+            "pages/6_🔨trento_container_initialization.py",
+            label="Go to the Trento Initialization page",
+            icon="🔨",
+        )   
 
 else:
     st.warning("you are not logged in, login first")

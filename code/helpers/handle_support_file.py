@@ -1,4 +1,5 @@
 import json
+import re
 import polars as pl
 from datetime import datetime
 from os import path, getcwd, listdir, system
@@ -56,7 +57,9 @@ def get_support_config_files(upload_dir: str) -> list:
     Returns:
         list: list of support config files
     """
-    support_files = [ x for x in listdir(upload_dir) if path.isfile(f'{upload_dir}/{x}')]
+    pattern = re.compile(r"^scc_.*\.txz$")
+    support_files = [ x for x in listdir(upload_dir) if path.isfile(f'{upload_dir}/{x}')
+        and pattern.match(x)]
     return support_files
 
 def initial_update_support_file(user_name: str, pl_support_file: str,

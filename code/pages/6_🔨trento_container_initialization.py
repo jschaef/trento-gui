@@ -63,10 +63,16 @@ if st.session_state.get("logged_in", None) :
     # vf.make_big_vspace(1, col1)
     if project and support_action_radio == "__Create a new project__":
         support_files = hsf.get_support_config_files(support_file_dir)
+        help =  """
+        Only files starting with scc_ and suffix .txz are considered supportconfig files.
+        """
+        
         if not cluster:
-            project_support_files = col1.selectbox("Supportconfig files", support_files)
+            project_support_files = col1.selectbox("Supportconfig files", support_files,
+                help=help )
         else:
-            project_support_files = col1.multiselect("Supportconfig files", support_files)
+            project_support_files = col1.multiselect("Supportconfig files", support_files,
+                help=help )
         # if  support_files and support_files[0] == 0:
         if not support_files:
             col1.info("""You don't have any supportconfig files to check with trento.
@@ -98,31 +104,34 @@ if st.session_state.get("logged_in", None) :
                 comps, index=index,horizontal=True, help="Correct the manufacturer if it has been wrongly detected")
 
         col1_1, col1_2 = col1.columns([0.2,0.8])
-        # checks = col1_1.selectbox("Select which Trento checks you want to execute", groups)
         vf.make_big_vspace(1, col1)
         wanda_ret_code = 1
-        if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
-            with st.spinner("Waiting for container starts ..."):
-                col1.write("")
-                col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
-                script_container = col1.container(border=True)
-                wanda_dict = {"project": project}
-                ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
-            wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
+        env_check = tcsc_checks.check_environment(col1_1)
+        if env_check:
+            if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
+                with st.spinner("Waiting for container starts ..."):
+                    col1.write("")
+                    col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
+                    script_container = col1.container(border=True)
+                    wanda_dict = {"project": project}
+                    ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
+                wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
 
-        vf.make_big_vspace(1, col1)
-        col1_1, col1_2 = col1.columns([0.2,0.8])
-        if wanda_ret_code == 0:
-            df, support_file = hsf.load_support_file(username)
-            projects = hsf.get_projects(username)
-            if project not in projects:
-                hsf.initial_update_support_file(username, support_file, project_support_files, 
-                    project, basic_info)
-            col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
-                of project {project}""", icon="🔍")
-        vf.make_big_vspace(1, col1)
+            vf.make_big_vspace(1, col1)
+            col1_1, col1_2 = col1.columns([0.2,0.8])
+            if wanda_ret_code == 0:
+                df, support_file = hsf.load_support_file(username)
+                projects = hsf.get_projects(username)
+                if project not in projects:
+                    hsf.initial_update_support_file(username, support_file, project_support_files, 
+                        project, basic_info)
+                col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
+                    of project {project}""", icon="🔍")
+            vf.make_big_vspace(1, col1)
+        else:
+            col1_1.warning("Please correct the environment issues first")
         if col1.button("Back to top", on_click=lh.trento_check_clean_up):
-                    pass
+            pass
         
 else:
     st.warning("you are not logged in, login first")
