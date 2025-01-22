@@ -42,7 +42,7 @@ def format_output(output: list, col: DeltaGenerator):
         # elif any(re.match(f"^\[{result}\].*", line) for result in results):
         #     line = re.sub(r"^(.*)$", rf"###### \1", line)
         #     col.markdown(line)
-        elif:
+        elif any(re.match(f"^\[{result}\].*", line) for result in results):
             for result in results:
                 if re.match(f"^\[{result}\].*", line):
                     line = re.sub(rf"^\[({result})\](.*)$", rf"**\1** \2", line)

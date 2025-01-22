@@ -79,5 +79,12 @@ def run_checks(workspace: str, username: str, project: str, place_holder: DeltaG
         check_results = ret[1]
         df = hsf.add_wanda_check_results(username, check_results, project)
         format_output = fwo.format_output(check_results, place_holder)
-        #place_holder.code(ret[1])
-        #place_holder.code(format_output)
+        destroy_container(place_holder, workspace, project)
+
+def destroy_container(col: DeltaGenerator, workspace:str project: str,) -> bool:
+    script = """
+#!/bin/bash
+    unset LANG
+    tcsc hosts remove {project}
+"""
+    ret = p_help.run_script(script, workspace, 'destroy_container.sh', col)

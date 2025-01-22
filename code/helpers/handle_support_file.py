@@ -129,3 +129,34 @@ def add_wanda_check_results(user_name: str, check_results: list, project: str) -
     # Write the updated DataFrame back to the parquet file
     df.write_parquet(support_file)
     return df
+
+def is_check_results_empty(user_name: str, project: str) -> bool:
+    """Check if the check_results column for a given project contains an empty list.
+
+    Args:
+        user_name (str): The user's unique name
+        project (str): The project name
+
+    Returns:
+        bool: True if the check_results column contains an empty list, False otherwise
+    """
+    df, _ = load_support_file(user_name)
+    result = df.filter((pl.col("project") == project) & (pl.col("check_results").list.len() > 0))
+    return result.is_empty()
+
+
+def get_check_results(user_name: str, project: str) -> list:
+    """Get the content of the check_results column for a given project.
+
+    Args:
+        user_name (str): The user's unique name
+        project (str): The project name
+
+    Returns:
+        list: The content of the check_results column for the given project
+    """
+    df, _ = load_support_file(user_name)
+    result = df.filter(pl.col("project") == project).select("check_results")
+    if not result.is_empty():
+        return result["check_results"].first()
+    return []

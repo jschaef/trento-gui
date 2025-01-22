@@ -2,6 +2,7 @@ import streamlit as st
 import helpers.handle_support_file as hsf
 import helpers.visual_funcs as vf
 import helpers.tcsc_checks as tcsc_checks
+import helpers.format_wanda_output as fwo
 import config as cfg
 from os import path, system
 
@@ -30,12 +31,16 @@ if st.session_state.get("logged_in", None):
 
         vf.make_big_vspace(1, col1)
 
-        if col1b.button("Run checks", key="run_checks"):
-            col1b.info(f"""project {project} seems to be running the 
-                first time and needs to be processed. Be patient - 
-                it may take a while""")
-            script_container = col1b.container(border=True)
-            ret = tcsc_checks.run_checks(workspace, username, project, col1b)
+        check_results = hsf.get_check_results(username, project)
+        if check_results:
+            format_output = fwo.format_output(check_results, col1b)
+        else: 
+            if col1b.button("Run checks", key="run_checks"):
+                col1b.info(f"""project {project} seems to be running the 
+                    first time and needs to be processed. Be patient - 
+                    it may take a while""")
+                script_container = col1b.container(border=True)
+                ret = tcsc_checks.run_checks(workspace, username, project, col1b)
     else:
         col1.write("No projects found, please create a project first")
         col1.page_link(
