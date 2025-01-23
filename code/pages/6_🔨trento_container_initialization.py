@@ -108,30 +108,30 @@ if st.session_state.get("logged_in", None) :
         col1_1, col1_2 = col1.columns([0.2,0.8])
         vf.make_big_vspace(1, col1)
         wanda_ret_code = 1
-        env_check = tcsc_checks.check_environment(col1_1)
-        if env_check:
-            if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
-                with st.spinner("Waiting for container starts ..."):
-                    col1.write("")
-                    col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
-                    script_container = col1.container(border=True)
-                    wanda_dict = {"project": project}
-                    ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
-                wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
+        #env_check = tcsc_checks.check_environment(col1_1)
+        # if env_check:
+        if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
+            with st.spinner("Waiting for container starts ..."):
+                col1.write("")
+                col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
+                script_container = col1.container(border=True)
+                wanda_dict = {"project": project}
+                ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
+            wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
 
-            vf.make_big_vspace(1, col1)
-            col1_1, col1_2 = col1.columns([0.2,0.8])
-            if wanda_ret_code == 0:
-                df, support_file = hsf.load_support_file(username)
-                projects = hsf.get_projects(username)
-                if project not in projects:
-                    hsf.initial_update_support_file(username, support_file, project_support_files, 
-                        project, basic_info)
-                col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
-                    of project {project}""", icon="🔍")
-            vf.make_big_vspace(1, col1)
-        else:
-            col1_1.warning("Please correct the environment issues first")
+        vf.make_big_vspace(1, col1)
+        col1_1, col1_2 = col1.columns([0.2,0.8])
+        if wanda_ret_code == 0:
+            df, support_file = hsf.load_support_file(username)
+            projects = hsf.get_projects(username)
+            if project not in projects:
+                hsf.initial_update_support_file(username, support_file, project_support_files, 
+                    project, basic_info)
+            col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
+                of project {project}""", icon="🔍")
+        vf.make_big_vspace(1, col1)
+        # else:
+        #     col1_1.warning("Please correct the environment issues first")
         if col1.button("Back to top", on_click=lh.trento_check_clean_up):
             pass
         
