@@ -2,6 +2,7 @@ import streamlit as st
 from os import system
 import helpers.visual_funcs as visf
 import helpers.handle_users as user_mgmt
+import helpers.tcsc_checks as tcsc_checks
 import config as cfg
 
 def admin_menu(cols: st.columns):
@@ -9,7 +10,7 @@ def admin_menu(cols: st.columns):
     header_ph = col1.empty()
     header_container = header_ph.container()
     header_container.header('Admin Service')
-    menu_items = ["Container Service", "User Management", "Trento Service"]
+    menu_items = ["Check Environment", "Container Service", "Trento Service", "User Management",]
     choice = header_container.radio('Take your Choice',menu_items)
     header_container.write('___')
     if choice == 'Container Service':
@@ -18,7 +19,16 @@ def admin_menu(cols: st.columns):
         user_service()
     elif choice == 'Trento Service':
         trento_service()
+    elif choice == 'Check Environment':
+        check_environment()
 
+def check_environment():
+    cols = visf.create_columns(4, [0,1,1,1])
+    col1 = cols[0]
+    env_check = tcsc_checks.check_environment(col1)
+    if not env_check:
+        col1.warning("Please correct the environment issues first")
+    
 def container_service():
     cols = visf.create_columns(4, [0,1,1,1])
     col1 = cols[0]

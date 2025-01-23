@@ -108,8 +108,6 @@ if st.session_state.get("logged_in", None) :
         col1_1, col1_2 = col1.columns([0.2,0.8])
         vf.make_big_vspace(1, col1)
         wanda_ret_code = 1
-        #env_check = tcsc_checks.check_environment(col1_1)
-        # if env_check:
         if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
             with st.spinner("Waiting for container starts ..."):
                 col1.write("")
@@ -130,8 +128,6 @@ if st.session_state.get("logged_in", None) :
             col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
                 of project {project}""", icon="🔍")
         vf.make_big_vspace(1, col1)
-        # else:
-        #     col1_1.warning("Please correct the environment issues first")
         if col1.button("Back to top", on_click=lh.trento_check_clean_up):
             pass
         
@@ -141,5 +137,3 @@ else:
 
 end = time.perf_counter()
 st.write(f'process_time: {round(end-start_time, 4)}')
-
-# Manufacturer:  Amazon EC2, Xen, VMware, KVM, Microsoft Corporation, Google, Lenovo
