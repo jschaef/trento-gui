@@ -2,6 +2,7 @@ import streamlit as st
 import config as cfg
 import user
 import helpers.handle_users as user_mgmt
+import helpers.layout_helpers as lh
 from datetime import datetime
 
 def user_action():
@@ -31,3 +32,5 @@ if "logged_in" not in st.session_state:
         user_mgmt.add_record(username, datetime.now(), False)
 else:
     st.warning("you are already logged in, logout first to login again")
+
+lh.display_admin_link()
