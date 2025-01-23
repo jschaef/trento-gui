@@ -48,7 +48,7 @@ if st.session_state.get("logged_in", None):
             if len(check_results) > 1:
                 topic = col3.selectbox("select the topic you want to filter", 
                     ["all", "Corosync", "SBD", "Pacemaker", "OS and package versions",
-                     "saptune", "Azure Fence Agent"], key="topic")
+                     "saptune", "Azure Fence Agent", "Filesystems"], key="topic")
                 message_type = col4.selectbox("select the message type you want to filter",
                     message_types, key="message_type",
                     help=f"Select message type: {', '.join(message_types)}")
