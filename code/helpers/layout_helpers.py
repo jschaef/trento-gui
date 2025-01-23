@@ -74,3 +74,7 @@ def trento_check_post(support_files):
 
 def trento_check_clean_up():
     st.session_state.pop("trento_check", None)
+
+def display_admin_link():
+    if st.session_state.get("user_role", None) == "admin":
+        st.sidebar.page_link("pages/4_👩‍✈️admin.py", label="Admin tasks", icon="👩‍✈️")
