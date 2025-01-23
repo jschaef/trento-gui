@@ -19,6 +19,7 @@ def format_output(output: list, col: DeltaGenerator,
         "Pacemaker",
         "saptune",
         "Azure Fence Agent",
+        "Filesystems",
         ]
 
     sub_sections = ["Remediation", "References"]
@@ -39,7 +40,7 @@ def format_output(output: list, col: DeltaGenerator,
         output = filter_section(output, sections, section, col)
         sections.append(section)
     if severity != "all":
-        output = filter_topic(output, severities, severity, section)
+        output = filter_topic(output, severities, severity, section, sections)
         severities.append(severity)
 
     for line in output:
@@ -95,12 +96,17 @@ def filter_section(output: list, sections: list, section: str, col ) -> list:
             continue
     return return_field
 
-def filter_topic(output: list, severities:list, severity: str, section: str) -> list:
+def filter_topic(output: list, severities:list, severity: str, 
+        section: str, sections: list) -> list:
     """Filter the output of the script based on severities like critical.
     Args:
         output (list): list of strings
+        severities (list): list of all available severities
+        severity (str): severity to filter
+        section (str): section to filter
+        sections (list): list of all available sections
     Returns:
-        None
+        list: list of strings
     """
     severities.remove(severity)
     return_field = []
