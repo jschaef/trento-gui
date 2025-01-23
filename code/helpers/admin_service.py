@@ -9,22 +9,62 @@ def admin_menu(cols: st.columns):
     header_ph = col1.empty()
     header_container = header_ph.container()
     header_container.header('Admin Service')
-    menu_items = ["Container Service", "User Management"]
+    menu_items = ["Container Service", "User Management", "Trento Service"]
     choice = header_container.radio('Take your Choice',menu_items)
     header_container.write('___')
     if choice == 'Container Service':
         container_service()
     elif choice == 'User Management':
         user_service()
+    elif choice == 'Trento Service':
+        trento_service()
 
 def container_service():
     cols = visf.create_columns(4, [0,1,1,1])
     col1 = cols[0]
     col1.subheader('Container Management')
-    menu_items = ['Show Containers', 'Delete Containers', 
-                    'Start Containers', 'Stop Containers']
+    menu_items = ['Show Containers', 'Delete Containers',]
     choice = col1.selectbox('Take your Choice',menu_items)
 
+def trento_service():
+    cols = visf.create_columns(4, [0,1,1,1])
+    col1 = cols[0]
+    col1.subheader('Trento Management')
+    menu_items = ['Update Trento', 'Uninstall Trento', ]
+    container_items = ['all', 'wanda_container', 'cmd_container', 'hosts_container']
+    choice = col1.selectbox('Take your Choice',menu_items)
+    visf.make_vspace(1, col1)
+
+    if choice == 'Update Trento':
+        cols = st.columns([0.2,0.1,0.6])
+        col1 = cols[0]
+        col2 = cols[1]
+        col3 = cols[2]
+        col1.markdown('##### Update Trento')
+        col1.write('Do you want to update the git repo?')
+        update_git_repo = col1.radio('Update Git Repo', ['Yes', 'No'], help="""
+        Without updating the git repo containers will just be removed and new installed""",
+        horizontal=True, index=1)
+        if update_git_repo == 'No':
+            cont_choice = col1.selectbox('Choose Container(s) to update', container_items)
+            visf.make_vspace(5, col1)
+            if col1.button(f'Update {cont_choice}'):
+                pass
+
+def update_trento():
+    pass
+
+def uninstall_trento():
+    pass
+
+def pull_git_repo():
+    pass
+
+def show_containers():
+    pass
+
+def delete_containers():
+    pass
 
 def user_service():
     cols = visf.create_columns(4, [0,1,1,1])
