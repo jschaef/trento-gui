@@ -33,8 +33,3 @@ def menu_with_redirect():
             st.switch_page("pages/1_👩‍💻login.py")
     else:
         st.switch_page("pages/1_👩‍💻login.py")
-    #if st.session_state.get("user_role", None)  in "user":
-    #    pass
-            # st.write("You are not authorized to view this page.")
-
-    #menu()
