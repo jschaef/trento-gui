@@ -40,7 +40,11 @@ if not st.session_state.get("logged_in", None) :
     )
     #st.button("Submit", on_click=set_login)
 else:
+    col1.write("#### You are logged in now.")
     col1.write("Choose your action from the sidebar menu.")
+    col1.write("""You probably wanto to upload one or multiple supportconfig 
+               files or check existing projects with Trento.""")
+
 
 
 menu() # Render the dynamic menu!
