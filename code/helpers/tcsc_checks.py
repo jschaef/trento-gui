@@ -78,7 +78,7 @@ def run_checks(workspace: str, username: str, project: str, place_holder: DeltaG
         ret = p_help.run_script_1(script, workspace, 'run_checks.sh', place_holder)
         check_results = ret[1]
         df = hsf.add_wanda_check_results(username, check_results, project)
-        format_output = fwo.format_output(check_results, place_holder)
+        format_output = fwo.format_output(check_results, place_holder, "all", "all")
         destroy_container(place_holder, workspace, project)
         # place_holder.dataframe(df)
 
