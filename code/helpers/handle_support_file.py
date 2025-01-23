@@ -160,3 +160,20 @@ def get_check_results(user_name: str, project: str) -> list:
     if not result.is_empty():
         return result["check_results"].first()
     return []
+
+def delete_project_record(user_name: str, project: str) -> pl.DataFrame:
+    """Delete the record for a given project from the support file.
+
+    Args:
+        user_name (str): The user's unique name
+        project (str): The project name
+
+    Returns:
+        pl.DataFrame: The updated support file
+    """
+    df, support_file = load_support_file(user_name)
+    # Filter out the record with the specified project
+    updated_df = df.filter(pl.col("project") != project)
+    # Write the updated DataFrame back to the parquet file
+    updated_df.write_parquet(support_file)
+    return updated_df
