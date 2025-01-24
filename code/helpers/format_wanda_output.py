@@ -20,11 +20,12 @@ def format_output(output: list, col: DeltaGenerator,
         "saptune",
         "Azure Fence Agent",
         "Filesystems",
+        "Sapservices",
+        "SAP HANA System Replication Resource Agent ocf:suse:SAPHana",
         ]
 
     sub_sections = ["Remediation", "References"]
     severities = ["passing", "critical", "warning"]
-    critical = ["critical"]
     color_dict = {
         "passing": "green",
         "critical": "red",
