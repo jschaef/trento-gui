@@ -1,8 +1,10 @@
 import re
 from streamlit.delta_generator import DeltaGenerator
 
-def format_output(output: list, col: DeltaGenerator, 
-    section: str, severity: str) -> None:
+
+def format_output(
+    output: list, col: DeltaGenerator, section: str, severity: str
+) -> None:
     """Format the output of the script.
     Args:
         output (list): list of strings
@@ -22,7 +24,7 @@ def format_output(output: list, col: DeltaGenerator,
         "Filesystems",
         "Sapservices",
         "SAP HANA System Replication Resource Agent ocf:suse:SAPHana",
-        ]
+    ]
 
     sub_sections = ["Remediation", "References"]
     severities = ["passing", "critical", "warning"]
@@ -41,7 +43,7 @@ def format_output(output: list, col: DeltaGenerator,
         output = filter_section(output, sections, section, col)
         sections.append(section)
     if severity != "all":
-        output = filter_topic(output, severities, severity, section, sections)
+        output = filter_topic(output, severities, severity, section, sections, col)
         severities.append(severity)
 
     for line in output:
@@ -70,7 +72,11 @@ def format_output(output: list, col: DeltaGenerator,
             line = re.sub(r"^(.*)$", rf"{indent * indent_val}\1", line)
             col.write(line, unsafe_allow_html=True)
 
-def filter_section(output: list, sections: list, section: str, col ) -> list:
+    if not output:
+        col.info(f"No results found for severity {severity} in section {section}.")
+
+
+def filter_section(output: list, sections: list, section: str, col) -> list:
     """Filter the output of the script.
     Args:
         output (list): list of strings
@@ -79,8 +85,8 @@ def filter_section(output: list, sections: list, section: str, col ) -> list:
     Returns:
         None
     """
-    
-    sections.remove(section) 
+
+    sections.remove(section)
     return_field = []
     section_found = False
 
@@ -97,8 +103,10 @@ def filter_section(output: list, sections: list, section: str, col ) -> list:
             continue
     return return_field
 
-def filter_topic(output: list, severities:list, severity: str, 
-        section: str, sections: list) -> list:
+
+def filter_topic(
+    output: list, severities: list, severity: str, section: str, sections: list, col
+) -> list:
     """Filter the output of the script based on severities like critical.
     Args:
         output (list): list of strings
@@ -112,19 +120,27 @@ def filter_topic(output: list, severities:list, severity: str,
     severities.remove(severity)
     return_field = []
     topic_found = False
+    sections_field = []
 
     for line in output:
-        if re.match(f"^{section}$", line):
+        #if re.match(f"^{section}$", line):
+        if any(re.match(f"^{section}$", line) for section in sections):
+            sections_field.append([line, 0])
+            current_section = line
             return_field.append(line)
-        elif any(re.match(f"^\[{severity}\].*", line) for severity in severities):
+        elif any(re.match(f"^\[{item}\].*", line) for item in severities):
             topic_found = False
             continue
         elif re.match(f"^\[{severity}\].*", line):
             topic_found = True
             return_field.append(line)
+            sections_field[-1][1] += 1
         elif topic_found:
             return_field.append(line)
         else:
             continue
 
+    for section in sections_field:
+        if section[1] == 0:
+            return_field.remove(section[0])
     return return_field
