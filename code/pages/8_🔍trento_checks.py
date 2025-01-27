@@ -117,14 +117,14 @@ if st.session_state.get("logged_in", None):
             else:
                 col1.write("No projects found, please create a project first")
                 col1.page_link(
-                    "pages/6_🔨trento_container_initialization.py",
+                    "pages/6_🔨trento_project_setup.py",
                     label="Go to the Trento Initialization page",
                     icon="🔨",
                 )
     else:
         col1.write("No projects found, please create a project first")
         col1.page_link(
-            "pages/6_🔨trento_container_initialization.py",
+            "pages/6_🔨trento_project_setup.py",
             label="Go to the Trento Initialization page",
             icon="🔨",
         )

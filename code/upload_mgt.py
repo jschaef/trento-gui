@@ -9,7 +9,6 @@ def file_mngmt(upload_dir: str):
     if not path.isdir(upload_dir):
         system(f'mkdir -p {upload_dir}')
     manage_files = ['Show Supportconfig Files','Add Supportconfig Files', 'Delete Supportconfig Files']
-    #support_files = [ x for x in listdir(upload_dir) if path.isfile(f'{upload_dir}/{x}')]
     support_files = hsf.get_support_config_files(upload_dir)
     file_size = [path.getsize(f'{upload_dir}/{x}') for x in support_files]
     managef_options = col1.selectbox(
@@ -39,7 +38,7 @@ def file_mngmt(upload_dir: str):
                                     link_check = 1
                 if link_check == 1:
                     visf.make_vspace(1, col1)
-                    col1.page_link("pages/6_🔨trento_container_initialization.py", label="Go to Trento Checks",
+                    col1.page_link("pages/6_🔨trento_project_setup.py", label="Go to Trento Checks",
                         icon="🔨")
 
     elif managef_options == 'Delete Supportconfig Files':
