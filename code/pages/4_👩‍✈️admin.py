@@ -2,7 +2,7 @@ import streamlit as st
 from menu import menu_with_redirect
 import helpers.admin_service as admin_service
 
-# Redirect to app.py if not logged in, otherwise show the navigation menu
+# Redirect to trento.py if not logged in, otherwise show the navigation menu
 menu_with_redirect()
 
 # Verify the user's role

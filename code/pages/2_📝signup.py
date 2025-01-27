@@ -14,7 +14,7 @@ if "logged_in" not in st.session_state:
         st.session_state.login_task = None
         st.session_state.username = user
         st.success("You have been logged in")
-        st.switch_page("app.py")
+        st.switch_page("trento.py")
 else:
     st.warning("you are already logged in, logout first to signup again")
     

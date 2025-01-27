@@ -131,4 +131,4 @@ if st.session_state.get("logged_in", None):
 
 else:
     st.warning("you are not logged in, login first")
-    st.switch_page("app.py")
+    st.switch_page("trento.py")

@@ -23,7 +23,7 @@ if "logged_in" not in st.session_state:
         st.session_state.login_task = None
         st.session_state.username = username
         st.success("You have been logged in")
-        st.switch_page("app.py")
+        st.switch_page("trento.py")
     elif selection == "user_password_wrong":
         st.warning("wrong password")
         user_mgmt.add_record(username, datetime.now(), False)
