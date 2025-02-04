@@ -11,7 +11,7 @@ def clb_text_input_project_exists(col: Optional[st.delta_generator.DeltaGenerato
          user_name:str) -> Optional[st.delta_generator.DeltaGenerator]:
     project_name = st.session_state.get("project_name", None)
     if hsf.check_project_exists(project_name, user_name):
-        col.warning("Project already exists, choose a differentn name")
+        col.warning("Project already exists, choose a different name")
         st.session_state["project_name_test"] = "_already_exists_"
     else:
         st.session_state.pop("project_name_test", None)
