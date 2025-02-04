@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import dis
 import time
 import streamlit as st
 import config as cfg
@@ -53,18 +52,19 @@ if st.session_state.get("logged_in", None) :
             "Project Name",
             help="""Enter an identifier for the Project, 
             e.g. the SR number""",
-            on_change=hcb.clb_text_input,args=(col3, "Project must not be empty"),
+            on_change=hcb.clb_text_input_project_exists,args=(col3, username),
+            key="project_name"
         )
         cluster =  col2.checkbox(help="""Check this box if you want to compare multiple supportconfig files,
                          e.g. from a cluster""", label="Cluster", disabled=True, value=True)
     else:
         st.switch_page("pages/8_🔍trento_checks.py")
 
-    vf.make_big_vspace(1, col1)
-    vf.make_big_vspace(2, col3)
     toggle_ph = col3.empty()
     # vf.make_big_vspace(1, col1)
-    if project and support_action_radio == "__Create a new project__":
+    if project and support_action_radio == "__Create a new project__" and not st.session_state.get("project_name_test", None):
+        vf.make_big_vspace(1, col1)
+        vf.make_big_vspace(2, col3)
         col1.markdown("##### Select supportconfig file/s you want to execute Trento checks on")
         support_files = hsf.get_support_config_files(support_file_dir)
         help =  """
