@@ -60,11 +60,11 @@ if st.session_state.get("logged_in", None) :
     else:
         st.switch_page("pages/8_🔍trento_checks.py")
 
+    vf.make_big_vspace(1, col1)
+    vf.make_big_vspace(2, col3)
     toggle_ph = col3.empty()
     # vf.make_big_vspace(1, col1)
     if project and support_action_radio == "__Create a new project__" and not st.session_state.get("project_name_test", None):
-        vf.make_big_vspace(1, col1)
-        vf.make_big_vspace(2, col3)
         col1.markdown("##### Select supportconfig file/s you want to execute Trento checks on")
         support_files = hsf.get_support_config_files(support_file_dir)
         help =  """
@@ -87,6 +87,7 @@ if st.session_state.get("logged_in", None) :
 
     if project and project_support_files:
         # with st.spinner(f"Investigating supportconfig files {support_files}"):
+        vf.make_big_vspace(2, col3)
         vf.make_vspace(5, col1)
         col1 = st.columns([1])[0]
 
