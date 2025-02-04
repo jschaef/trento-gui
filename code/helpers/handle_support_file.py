@@ -177,3 +177,17 @@ def delete_project_record(user_name: str, project: str) -> pl.DataFrame:
     # Write the updated DataFrame back to the parquet file
     updated_df.write_parquet(support_file)
     return updated_df
+
+def check_project_exists(project_name:str, user_name: str) -> bool:
+    """Check if a project exists in the support file
+
+    Args:
+        project_name (str): The project name
+        user_name (str): The user's unique name
+
+    Returns:
+        bool: True if the project exists, False otherwise
+    """
+
+    user_project_list = get_projects(user_name)
+    return project_name in user_project_list
