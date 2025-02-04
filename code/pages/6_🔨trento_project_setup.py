@@ -30,7 +30,8 @@ if st.session_state.get("logged_in", None) :
 
     st.title("Trento Initial Setup")
     col1, *_ = vf.create_columns(3, [0, 1, 1])
-    col1.write("""On this page you initialize the Trento containers to prepare checks on your supportconfig files.""")
+    col1.write("""On this page you initialize the Trento containers to prepare checks on your supportconfig files.
+               To start, you need to insert a new project name and select the supportconfig files you want to check.""")
     col1.write('___')
     grid_parent = st.empty()
 
@@ -61,10 +62,10 @@ if st.session_state.get("logged_in", None) :
 
     vf.make_big_vspace(1, col1)
     vf.make_big_vspace(2, col3)
-    col1.markdown("##### Select supportconfig file/s you want to execute Trento checks on")
     toggle_ph = col3.empty()
     # vf.make_big_vspace(1, col1)
     if project and support_action_radio == "__Create a new project__":
+        col1.markdown("##### Select supportconfig file/s you want to execute Trento checks on")
         support_files = hsf.get_support_config_files(support_file_dir)
         help =  """
         Only files starting with scc_ and suffix .txz are considered supportconfig files.
@@ -84,7 +85,7 @@ if st.session_state.get("logged_in", None) :
                                    icon="📂")
             support_files = []
 
-    if project and support_files:
+    if project and project_support_files:
         # with st.spinner(f"Investigating supportconfig files {support_files}"):
         vf.make_vspace(5, col1)
         col1 = st.columns([1])[0]
