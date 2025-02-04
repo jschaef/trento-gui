@@ -63,7 +63,6 @@ if st.session_state.get("logged_in", None) :
     vf.make_big_vspace(1, col1)
     vf.make_big_vspace(2, col3)
     toggle_ph = col3.empty()
-    # vf.make_big_vspace(1, col1)
     if project and support_action_radio == "__Create a new project__" and not st.session_state.get("project_name_test", None):
         col1.markdown("##### Select supportconfig file/s you want to execute Trento checks on")
         support_files = hsf.get_support_config_files(support_file_dir)
@@ -87,14 +86,17 @@ if st.session_state.get("logged_in", None) :
 
     if project and project_support_files:
         # with st.spinner(f"Investigating supportconfig files {support_files}"):
-        vf.make_big_vspace(2, col3)
+
+        if len(project_support_files) == 1:
+            col1.warning("please select at least two supportconfig files to compare")
+
         vf.make_vspace(5, col1)
         col1 = st.columns([1])[0]
 
         if not cluster:
             project_support_files = [project_support_files]
         support_files_pathes = [f"{support_file_dir}/{x}" for x in project_support_files]
-        if project_support_files:
+        if project_support_files and len(project_support_files) > 1:
             col_displ = col1
             show_info = toggle_ph.toggle("Display basic supportconfig information", False)
             basic_info = lh.get_basic_information(support_files_pathes)
@@ -111,28 +113,30 @@ if st.session_state.get("logged_in", None) :
         col1_1, col1_2 = col1.columns([0.2,0.8])
         vf.make_big_vspace(1, col1)
         wanda_ret_code = 1
-        if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
-            with st.spinner("Waiting for container starts ..."):
-                col1.write("")
-                col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
-                script_container = col1.container(border=True)
-                wanda_dict = {"project": project}
-                ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
-            wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
 
-        vf.make_big_vspace(1, col1)
-        col1_1, col1_2 = col1.columns([0.2,0.8])
-        if wanda_ret_code == 0:
-            df, support_file = hsf.load_support_file(username)
-            projects = hsf.get_projects(username)
-            if project not in projects:
-                hsf.initial_update_support_file(username, support_file, project_support_files, 
-                    project, basic_info)
-            col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
-                of project {project}""", icon="🔍")
-        vf.make_big_vspace(1, col1)
-        if col1.button("Back to top", on_click=lh.trento_check_clean_up):
-            pass
+        if len(project_support_files) > 1:
+            if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
+                with st.spinner("Waiting for container starts ..."):
+                    col1.write("")
+                    col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
+                    script_container = col1.container(border=True)
+                    wanda_dict = {"project": project}
+                    ssc.start_containers(workspace,script_container, support_files_pathes, wanda_dict)
+                wanda_ret_code = tcsc_checks.check_project_status(script_container, project)
+
+            vf.make_big_vspace(1, col1)
+            col1_1, col1_2 = col1.columns([0.2,0.8])
+            if wanda_ret_code == 0:
+                df, support_file = hsf.load_support_file(username)
+                projects = hsf.get_projects(username)
+                if project not in projects:
+                    hsf.initial_update_support_file(username, support_file, project_support_files, 
+                        project, basic_info)
+                col1_2.page_link("pages/8_🔍trento_checks.py", label=f"""Go to Trento Checks for the final analyzis
+                    of project {project}""", icon="🔍")
+            vf.make_big_vspace(1, col1)
+            if col1.button("Back to top", on_click=lh.trento_check_clean_up):
+                pass
         
 else:
     st.warning("you are not logged in, login first")
