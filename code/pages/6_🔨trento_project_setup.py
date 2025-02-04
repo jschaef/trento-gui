@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import dis
 import time
 import streamlit as st
 import config as cfg
@@ -54,7 +55,7 @@ if st.session_state.get("logged_in", None) :
             on_change=hcb.clb_text_input,args=(col3, "Project must not be empty"),
         )
         cluster =  col2.checkbox(help="""Check this box if you want to compare multiple supportconfig files,
-                         e.g. from a cluster""", label="Cluster")
+                         e.g. from a cluster""", label="Cluster", disabled=True, value=True)
     else:
         st.switch_page("pages/8_🔍trento_checks.py")
 
