@@ -85,8 +85,6 @@ if st.session_state.get("logged_in", None) :
             support_files = []
 
     if project and project_support_files:
-        # with st.spinner(f"Investigating supportconfig files {support_files}"):
-
         if len(project_support_files) == 1:
             col1.warning("please select at least two supportconfig files to compare")
 
@@ -116,7 +114,7 @@ if st.session_state.get("logged_in", None) :
 
         if len(project_support_files) > 1:
             if col1.button("Initialize Containers", on_click=lh.trento_check_post, args=(support_files,)):
-                with st.spinner("Waiting for container starts ..."):
+                with st.spinner("Waiting for container starts ...", show_time=True):
                     col1.write("")
                     col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
                     script_container = col1.container(border=True)

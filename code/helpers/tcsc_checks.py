@@ -74,7 +74,7 @@ def run_checks(workspace: str, username: str, project: str, place_holder: DeltaG
     unset LANG
     tcsc checks run {project}
     """
-    with st.spinner("Running checks ..."):
+    with st.pinner("Running checks ...", show_time=True):
         ret = p_help.run_script_1(script, workspace, 'run_checks.sh', place_holder)
         check_results = ret[1]
         df = hsf.add_wanda_check_results(username, check_results, project)

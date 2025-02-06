@@ -61,7 +61,7 @@ def get_basic_information(path_field: list) -> dict:
     for file in path_field:
         base_file = os.path.basename(file)
         if base_file not in file_info_dict.keys():
-            with st.spinner(f"Reading {file}..."):
+            with st.spinner(f"Reading {file}...", show_time=True):
                 file_info_dict[base_file] = tfr.get_basic_information(file)
         return_dict[base_file] = file_info_dict[base_file]
     if cmp_dict != file_info_dict:
